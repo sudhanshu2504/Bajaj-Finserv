@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import Select from 'react-select';
 
 function App() {
   const [jsonInput, setJsonInput] = useState('');
@@ -26,9 +27,8 @@ function App() {
     }
   };
 
-  const handleOptionChange = (e) => {
-    const value = Array.from(e.target.selectedOptions, (option) => option.value);
-    setSelectedOptions(value);
+  const handleSelectChange = (selected) => {
+    setSelectedOptions(selected.map(option => option.value));
   };
 
   const renderFilteredResponse = () => {
@@ -57,6 +57,13 @@ function App() {
     );
   };
 
+  // Options for react-select
+  const filterOptions = [
+    { value: 'alphabets', label: 'Alphabets' },
+    { value: 'numbers', label: 'Numbers' },
+    { value: 'highest_lowercase_alphabet', label: 'Highest Lowercase Alphabet' },
+  ];
+
   return (
     <div className="App">
       <h1>{'0101CS211118'}</h1>
@@ -75,18 +82,17 @@ function App() {
       {response && (
         <div className="response-container">
           <h3>Filters</h3>
-          <select
-            multiple={true}
-            onChange={handleOptionChange}
+          <Select
+            isMulti
+            options={filterOptions}
+            onChange={handleSelectChange}
+            value={filterOptions.filter(option => selectedOptions.includes(option.value))}
             className="multi-select"
-          >
-            <option value="alphabets">Alphabets</option>
-            <option value="numbers">Numbers</option>
-            <option value="highest_lowercase_alphabet">Highest Lowercase Alphabet</option>
-          </select>
+          />
           {renderFilteredResponse()}
         </div>
       )}
+      <div>Backend might take 40-50 second to start, due to unactivity for long time</div>
     </div>
   );
 }
